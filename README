@@ -1,0 +1,24 @@
+Innovative Hotel Management
+*********************************************************
+*********************************************************
+Download the file 'innovative-build-ubuntu' and run it using x-application on Linux.
+
+And if you want to build it from source, you can do so by pulling the repo, navigating to the directory containing the file 'innovative.pro' and running the following one-by-one on a terminal:
+
+qmake -project
+qmake innovative.pro
+make
+
+You need qmake to build it, though... :(
+Check if you got it by typing:
+qmake -v
+Install qmake before trying to build it.
+*********************************************************
+You can run the application by typing:
+
+innovative (on Windows)
+./innovative (on Linux)
+open innovative.app (on Mac)
+
+*********************************************************
+Be warned, the app is still in alpha.
