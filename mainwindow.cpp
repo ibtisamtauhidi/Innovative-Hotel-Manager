@@ -9,6 +9,7 @@
 #include "editroom.h"
 #include "editrestaurant.h"
 #include "billingmanager.h"
+#include "setting.h"
 #include <QtSql>
 #include <QDebug>
 
@@ -80,6 +81,12 @@ void mainWindow::on_button9_clicked()
     connect(InnObill,SIGNAL(finished(int)),this,SLOT(setupviewS()));
     InnObill->show();
 }
+void mainWindow::on_button10_clicked()
+{
+    InnOset = new setting;
+    connect(InnOset,SIGNAL(finished(int)),this,SLOT(setupviewS()));
+    InnOset->show();
+}
 
 void mainWindow::setupview()
 {
@@ -98,6 +105,26 @@ void mainWindow::setupview()
     qDebug( "Connected!" );
 
     QSqlQuery qry;
+
+    qry.prepare("SELECT value FROM settings WHERE key = 'name'");
+    if(!qry.exec())
+      qDebug() << qry.lastError();
+    else
+      qDebug( "Table Created!" );
+    while(qry.next())
+    {
+        ui->name->setText(qry.value(0).toString());
+    }
+
+    qry.prepare("SELECT value FROM settings WHERE key = 'motto'");
+    if(!qry.exec())
+      qDebug() << qry.lastError();
+    else
+      qDebug( "Table Created!" );
+    while(qry.next())
+    {
+        ui->motto->setText(qry.value(0).toString());
+    }
 
     if(!qry.exec("SELECT occupied FROM roomlist"))
     {

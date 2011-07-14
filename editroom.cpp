@@ -8,7 +8,7 @@ editRoom::editRoom(QWidget *parent) :
     ui(new Ui::editRoom)
 {
     ui->setupUi(this);
-    QRegExp regExp1("[A-Z0-9][0-9 ][0-9]*");
+    QRegExp regExp1("[0-9][0-9 ][0-9]*");
     ui->roomName->setValidator(new QRegExpValidator(regExp1, this));
     ui->catList->addItem(" :: Select One :: ");
     setupview();
@@ -224,4 +224,75 @@ void editRoom::on_catList_currentIndexChanged()
 void editRoom::on_okButton_clicked()
 {
     this->close();
+}
+void editRoom::on_removeButton_clicked()
+{
+    QString roomNo = ui->roomList->currentItem()->text();
+    qDebug() << roomNo;
+
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+
+    db.setDatabaseName( "./innovativedb.db" );
+
+    if( !db.open() )
+    {
+        qDebug() << db.lastError();
+        qFatal( "Failed to connect." );
+    }
+
+    qDebug( "Connected!" );
+
+    QSqlQuery qry;
+
+    qry.prepare("DELETE FROM roomlist WHERE roomno = :roomno");
+    qry.bindValue(":name",roomNo);
+    if(!qry.exec())
+    {
+        qDebug() << qry.lastError();
+    }
+    else
+    {
+        delete ui->roomList->item(ui->roomList->currentRow());
+        qDebug() << "Removed : " << roomNo;
+    }
+}
+void editRoom::on_roomList_currentItemChanged()
+{
+    ui->removeButton->setEnabled(0);
+    int num = ui->roomList->currentRow();
+    if( num > -1)
+    {
+        QListWidgetItem * roomItem = ui->roomList->item(num);
+        QString roomStr = roomItem->text();
+        QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+
+        db.setDatabaseName( "./innovativedb.db" );
+
+        if( !db.open() )
+        {
+            qDebug() << db.lastError();
+            qFatal( "Failed to connect." );
+        }
+
+        qDebug( "Connected!" );
+
+        QSqlQuery qry;
+        qry.prepare("SELECT occupied FROM roomlist WHERE roomno = :roomno");
+        qry.bindValue(":roomno",roomStr);
+        if(!qry.exec())
+          qDebug() << qry.lastError();
+        else
+          qDebug( "Table Created!" );
+        int occupied = 0;
+        while(qry.next())
+        {
+            if(qry.value(0).toInt()!=0)
+                occupied = 1;
+        }
+        if (occupied==0)
+            ui->removeButton->setEnabled(1);
+        else
+            ui->removeButton->setEnabled(0);
+
+    }
 }

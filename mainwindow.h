@@ -15,6 +15,7 @@ class editRoomCat;
 class editRoom;
 class editRestaurant;
 class billingManager;
+class setting;
 class mainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -35,6 +36,7 @@ private:
     editRoom *InnOeroom;
     editRestaurant *InnOerest;
     billingManager *InnObill;
+    setting *InnOset;
 
 private slots:
     void on_button1_clicked();
@@ -46,6 +48,7 @@ private slots:
     void on_button7_clicked();
     void on_button8_clicked();
     void on_button9_clicked();
+    void on_button10_clicked();
     void setupviewS();
 };
 

@@ -24,6 +24,8 @@ private slots:
     void on_addButton_clicked();
     void on_catList_currentIndexChanged();
     void on_okButton_clicked();
+    void on_removeButton_clicked();
+    void on_roomList_currentItemChanged();
 };
 
 #endif // EDITROOM_H

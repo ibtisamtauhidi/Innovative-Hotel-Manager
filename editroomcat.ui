@@ -40,7 +40,11 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QListWidget" name="catList"/>
+    <widget class="QListWidget" name="catList">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
