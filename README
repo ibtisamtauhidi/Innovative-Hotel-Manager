@@ -1,18 +1,18 @@
 Innovative Hotel Management
 *********************************************************
 *********************************************************
-Download the file 'innovative-build-ubuntu' and run it using x-application on Linux.
-
-And if you want to build it from source, you can do so by pulling the repo, navigating to the directory containing the file 'innovative.pro' and running the following one-by-one on a terminal:
+You can build this application from source, by pulling this repo, navigating to the directory containing the file 'innovative.pro' and running the following one-by-one on a terminal:
 
 qmake -project
 qmake innovative.pro
 make
 
 You need qmake to build it, though... :(
-Check if you got it by typing:
+Check if you have it by typing:
 qmake -v
 Install qmake before trying to build it.
+
+Although this app is fit for use, I am holding the release of a binary until a few more features are added.
 *********************************************************
 You can run the application by typing:
 
@@ -21,4 +21,24 @@ innovative (on Windows)
 open innovative.app (on Mac)
 
 *********************************************************
-Be warned, the app is still in alpha.
+Using the application is pretty straight forward. Follow the steps one-by-one and you are good to go.
+
+Remember these is just a suggested method. You can use it any way you want, it won't matter.
+
+1. Add room categories first. Examples of categories are: AC Single, AC Double, etc.
+2. Add room numbers to categories. The room numbers are, obviously, numbers. Use positive integers like a hotel should.
+
+Once the room categories and room numbers are set, you are ready to check-in guests into an empty room.
+
+You won't be able to delete that room or the room category to which the guest is checked in until he/she checks out. Neither can you check in other guest while the room is occupied.
+
+3. Add items to the restaurant menu, if applicable.
+
+If any checked in guest orders something, you can add the item's bill to his total bill by:
+
+4. If he orders an item from restaurant, add it by selecting 'Add Restaurant Orders'. You can add any other order by selecting 'Add Other Orders'
+
+5. You can check any checked in guest's billing details by going to 'Active Billing'. You can also add payments made by the guest by selecting add-payment.
+
+6. Check-out any guest by going to 'Guest Check-out'. The guest can be checked out if all his payments are made. You view total bill and balance in the check-out form itself. You can also clear any pending payment, if applicable, and then check-out the guest. Once the guest checks out, the room becomes available for further check-in.
+*********************************************************
