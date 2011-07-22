@@ -274,11 +274,11 @@ void checkOutForm::updateShits()
      }
      else
          qDebug( "Table Selected!" );
-
+    QString cintime;
      while (qry.next())
      {
          QString cur_item = qry.value(0).toString();
-         QString cintime = qry.value(1).toString();
+         cintime = qry.value(1).toString();
          ui->name->setText(cur_item);
          ui->checkInTime->setText(cintime);
          ui->payButton->setEnabled(1);
@@ -362,6 +362,64 @@ void checkOutForm::updateShits()
          int price = qry.value(1).toInt();
          totalPay+=price;
          }
+
+     qry.prepare("CREATE TABLE IF NOT EXISTS roomlist (id INTEGET PRIMARY KEY, roomno VARCHAR(5), cat INTEGER, occupied INTEGER)");
+     if(!qry.exec())
+         qDebug() << qry.lastError();
+     else
+         qDebug( "Room Table Validated..." );
+
+     qry.prepare("SELECT cat FROM roomlist WHERE roomno = :roomno");
+     qry.bindValue(":roomno",roomno);
+     if(!qry.exec())
+     {
+         qDebug() << qry.lastError();
+     }
+     else
+         qDebug( "Table Selected!" );
+
+     int catID;
+     while (qry.next()) {
+         catID = qry.value(0).toInt();
+     }
+
+
+     qry.prepare("CREATE TABLE IF NOT EXISTS roomcat (id INTEGET PRIMARY KEY, item VARCHAR(30), price INTEGER)");
+     if(!qry.exec())
+         qDebug() << qry.lastError();
+     else
+         qDebug( "Table Created!" );
+
+     qry.prepare("SELECT price FROM roomcat WHERE id = :catID");
+     qry.bindValue(":catID",catID);
+     if(!qry.exec())
+     {
+         qDebug() << qry.lastError();
+     }
+     else
+         qDebug( "Table Selected!" );
+
+     int room_rent;
+     while(qry.next())
+     {
+         room_rent = qry.value(0).toInt();
+     }
+
+     QDateTime in_time = QDateTime::fromString(cintime);
+     qDebug()<<"in"<<cintime;
+     QDateTime cur_time = QDateTime::currentDateTime();
+     qDebug()<<"out"<<cur_time.toString();
+
+     int secStayed = in_time.secsTo(cur_time);
+     int daysStayed = secStayed/86400;
+     if ((secStayed%86400)>600)
+     {
+         daysStayed++;
+     }
+     int totalRent = daysStayed*room_rent;
+     totalPrice+=totalRent;
+     QString totalRentStr;
+     totalRentStr.setNum(totalRent);
 
 
      QString TBStr1;

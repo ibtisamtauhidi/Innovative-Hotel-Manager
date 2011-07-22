@@ -139,13 +139,15 @@ void billingManager::updatetable()
         guestID = qry.value(0).toString();
     }
     qDebug()<<guestID;
-    qry.prepare("CREATE TABLE IF NOT EXISTS guestlist ( id INTEGET PRIMARY KEY, name VARCHAR(30),address VARCHAR(30), nationality VARCHAR(15), phone VARCHAR(15), occupation VARCHAR(15),purpose VARCHAR(20), occupant INTEGER, room VARCHAR(8), intime VARCHAR(30), outtime VARCHAR(30) )");
+    qry.prepare("CREATE TABLE IF NOT EXISTS guestlist ( id INTEGET PRIMARY KEY, name VARCHAR(30),"
+                "address VARCHAR(30), nationality VARCHAR(15), phone VARCHAR(15), occupation VARCHAR(15),"
+                "purpose VARCHAR(20), occupant INTEGER, room VARCHAR(8), intime VARCHAR(30), outtime VARCHAR(30) )");
     if(!qry.exec())
         qDebug() << qry.lastError();
     else
         qDebug( "Table Created!" );
 
-    qry.prepare("SELECT name FROM guestlist WHERE id=:guestID");
+    qry.prepare("SELECT name,intime FROM guestlist WHERE id=:guestID");
     qry.bindValue(":guestID",guestID);
     if(!qry.exec())
     {
@@ -153,11 +155,12 @@ void billingManager::updatetable()
     }
     else
         qDebug( "Table Selected!" );
-
+    QString intime;
     while (qry.next())
     {
         QString cur_item = qry.value(0).toString();
         ui->name->setText(cur_item);
+        intime = qry.value(1).toString();
     }
 
     qry.prepare("CREATE TABLE IF NOT EXISTS otherorders (id INTEGER PRIMARY KEY, time VARCHAR(30), text VARCHAR(40), price INTEGER, guestid INTEGER)");
@@ -262,6 +265,74 @@ void billingManager::updatetable()
         r=r+1;
     }
 
+    qry.prepare("CREATE TABLE IF NOT EXISTS roomlist (id INTEGET PRIMARY KEY, roomno VARCHAR(5), cat INTEGER, occupied INTEGER)");
+    if(!qry.exec())
+        qDebug() << qry.lastError();
+    else
+        qDebug( "Room Table Validated..." );
+
+    qry.prepare("SELECT cat FROM roomlist WHERE roomno = :roomno");
+    qry.bindValue(":roomno",roomno);
+    if(!qry.exec())
+    {
+        qDebug() << qry.lastError();
+    }
+    else
+        qDebug( "Table Selected!" );
+
+    int catID;
+    while (qry.next()) {
+        catID = qry.value(0).toInt();
+    }
+
+
+    qry.prepare("CREATE TABLE IF NOT EXISTS roomcat (id INTEGET PRIMARY KEY, item VARCHAR(30), price INTEGER)");
+    if(!qry.exec())
+        qDebug() << qry.lastError();
+    else
+        qDebug( "Table Created!" );
+
+    qry.prepare("SELECT price FROM roomcat WHERE id = :catID");
+    qry.bindValue(":catID",catID);
+    if(!qry.exec())
+    {
+        qDebug() << qry.lastError();
+    }
+    else
+        qDebug( "Table Selected!" );
+
+    int room_rent;
+    while(qry.next())
+    {
+        room_rent = qry.value(0).toInt();
+    }
+
+    QDateTime in_time = QDateTime::fromString(intime);
+    qDebug()<<"in"<<intime;
+    QDateTime cur_time = QDateTime::currentDateTime();
+    qDebug()<<"out"<<cur_time.toString();
+
+    int secStayed = in_time.secsTo(cur_time);
+    int daysStayed = secStayed/86400;
+    if ((secStayed%86400)>600)
+    {
+        daysStayed++;
+    }
+    int totalRent = daysStayed*room_rent;
+    totalPrice+=totalRent;
+    QString totalRentStr;
+    totalRentStr.setNum(totalRent);
+
+
+    QTableWidgetItem * textItem = new QTableWidgetItem("Room Rent");
+    QTableWidgetItem * priceItem = new QTableWidgetItem(totalRentStr);
+    QTableWidgetItem * timeItem = new QTableWidgetItem(intime);
+    int lastRow = ui->orders->rowCount()+1;
+
+    ui->orders->setRowCount(lastRow);
+    ui->orders->setItem(lastRow-1,0,textItem);
+    ui->orders->setItem(lastRow-1,1,timeItem);
+    ui->orders->setItem(lastRow-1,2,priceItem);
 
     QString TBStr1;
     TBStr1.setNum(totalPrice);
@@ -323,12 +394,6 @@ void billingManager::on_payButton_clicked()
     {
         guestID = qry.value(0).toString();
     }
-
-    qry.prepare("CREATE TABLE IF NOT EXISTS guestlist ( id INTEGET PRIMARY KEY, name VARCHAR(30),address VARCHAR(30), nationality VARCHAR(15), phone VARCHAR(15), occupation VARCHAR(15),purpose VARCHAR(20), occupant INTEGER, room VARCHAR(8), intime VARCHAR(30), outtime VARCHAR(30) )");
-    if(!qry.exec())
-        qDebug() << qry.lastError();
-    else
-        qDebug( "Table Created!" );
 
     qry.prepare("CREATE TABLE IF NOT EXISTS payments ( id INTEGET PRIMARY KEY, time VARCHAR(25), amount INTEGER, guestID INTEGER )");
     if(!qry.exec())

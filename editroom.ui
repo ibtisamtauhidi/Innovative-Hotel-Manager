@@ -55,7 +55,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="addButton">
+      <widget class="QPushButton" name="addButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -71,7 +71,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="removeButton">
+      <widget class="QPushButton" name="removeButton">
        <property name="enabled">
         <bool>false</bool>
        </property>

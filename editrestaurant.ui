@@ -95,7 +95,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="addItem">
+      <widget class="QPushButton" name="addItem">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -108,7 +108,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="removeItem">
+      <widget class="QPushButton" name="removeItem">
        <property name="minimumSize">
         <size>
          <width>0</width>
